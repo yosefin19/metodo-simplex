@@ -1,9 +1,13 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
+from monomial import *
+
 
 
 class ui_main_window(object): 
 
     matrix = []
+    monomials = []
+    list_constraints = []
 
     def setup_ui(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -92,6 +96,12 @@ class ui_main_window(object):
     def get_matrix(self):
         return self.matrix
 
+    def get_monomials(self):
+        return self.monomials
+
+    def get_constrains(self):
+        return self.list_constraints
+
     def add_constrains(self):
         constraints = self.get_constraints()
         variables = self.get_variables()
@@ -100,26 +110,22 @@ class ui_main_window(object):
         self.variable.setObjectName("u")
         self.variable.setText("U")
         self.gridLayout.addWidget(self.variable, 5 , 0 , 1, 1)
-
+        #
         self.variable = QtWidgets.QLabel(self.centralwidget)
         self.variable.setObjectName("=")
         self.variable.setText("=")
         self.gridLayout.addWidget(self.variable, 5 , 1 , 1, 1)
-
-        combo = "combo5_0"
-        self.combo = QtWidgets.QComboBox(self.centralwidget)
-        self.combo.setObjectName(combo)
-        self.combo.addItem("+")
-        self.combo.addItem("-")
-        self.gridLayout.addWidget(self.combo, 5 , 2, 1, 1)
+  
 
         var = 1  
-        column = 3
+        column = 2
         for u in range (1, variables+1):
-            name = "U" + str(u) 
-            self.name = QtWidgets.QLineEdit(self.centralwidget)
-            self.name.setObjectName(name)
-            self.gridLayout.addWidget(self.name, 5 , column, 1, 1)
+            mono = monomial(self.centralwidget)
+
+            self.gridLayout.addWidget(mono.signo, 5 , column, 1, 1)
+            column += 1
+
+            self.gridLayout.addWidget(mono.coefficient, 5 , column, 1, 1)
             column += 1
             variable = "x" + str(u) 
             self.variable = QtWidgets.QLabel(self.centralwidget)
@@ -127,38 +133,22 @@ class ui_main_window(object):
             self.variable.setText(variable)
             self.gridLayout.addWidget(self.variable, 5 , column , 1, 1)
             column += 1
-            if var == variables:
-                continue
-            else:
-                combo = "combo" + str(5) + "_" + str(u)  
-                self.comboBox_4 = QtWidgets.QComboBox(self.centralwidget)
-                self.comboBox_4.setObjectName("comboBox")
-                self.comboBox_4.addItem("+")
-                self.comboBox_4.addItem("-")
-                self.gridLayout.addWidget(self.comboBox_4, 5 , column, 1, 1)
-                column += 1
-                var += 1     
+            self.monomials.append(mono)
 
         row = 6
 
         #constraints
         for i in range (1, constraints+1):
-
-            combo = "combo" + str(i) + "_" + "0" 
-            self.combo = QtWidgets.QComboBox(self.centralwidget)
-            self.combo.setObjectName(combo)
-            self.combo.addItem("+")
-            self.combo.addItem("-")
-            self.gridLayout.addWidget(self.combo, row , 0, 1, 1)
+            rest = constrains(self.centralwidget)
 
             x = 1
-            column = 1
+            column = 0
+            monos = []
             for j in range (1, variables+1):
-                name = "dato" + str(i) + "_" + str(j) 
-                self.name = QtWidgets.QLineEdit(self.centralwidget)
-                self.name.setObjectName(name)
-                self.gridLayout.addWidget(self.name, row , column, 1, 1)
-
+                mono = monomial(self.centralwidget) 
+                self.gridLayout.addWidget(mono.signo, row , column, 1, 1)
+                column += 1
+                self.gridLayout.addWidget(mono.coefficient, row , column, 1, 1)
                 column += 1
                 variable = "x" + str(j) 
                 self.variable = QtWidgets.QLabel(self.centralwidget)
@@ -166,45 +156,70 @@ class ui_main_window(object):
                 self.variable.setText(variable)
                 self.gridLayout.addWidget(self.variable, row , column , 1, 1)
                 column += 1
-                if x == variables:
-                    continue
-                else:
-                    combo = "combo" + str(i) + "_" + str(j) 
-                    self.combo = QtWidgets.QComboBox(self.centralwidget)
-                    self.combo.setObjectName(combo)
-                    self.combo.addItem("+")
-                    self.combo.addItem("-")
-                    self.gridLayout.addWidget(self.combo, row , column, 1, 1)
-
-                    column += 1
                 x += 1
-            combo = "combo" + str(i) + "_" + str(j) 
-            self.combo = QtWidgets.QComboBox(self.centralwidget)
-            self.combo.setObjectName(combo)
-            self.combo.addItem(">")
-            self.combo.addItem("<")
-            self.combo.addItem("=")
-            self.gridLayout.addWidget(self.combo, row , column, 1,  1)
-            column += 1
-            
-            combo = "combo" + str(i) + "_" + str(j)
-            self.combo = QtWidgets.QComboBox(self.centralwidget)
-            self.combo.setObjectName(combo)
-            self.combo.addItem("+")
-            self.combo.addItem("-")
-            self.gridLayout.addWidget(self.combo, row , column, 1, 1)
-            column += 1
+                monos.append(mono)
 
-            name = "dato" + str(i) + "_" + str(j) 
-            self.name = QtWidgets.QLineEdit(self.centralwidget)
-            self.name.setObjectName(name)
-            self.gridLayout.addWidget(self.name, row, column, 1, 1)
+            rest.monomials = monos   
+            self.gridLayout.addWidget(rest.operator, row , column, 1,  1)
+            column += 1
+            mono = monomial(self.centralwidget)
+            self.gridLayout.addWidget(mono.signo, row , column, 1, 1)
+            column += 1
+            self.gridLayout.addWidget(mono.coefficient, row, column, 1, 1)
             row +=1
+            rest.value = mono
+
+            self.list_constraints.append(rest)
 
         self.pushButton2 = QtWidgets.QToolButton(self.centralwidget)
         self.pushButton2.setText("Resolver")
         self.pushButton2.setObjectName("toolButton")
-        self.gridLayout.addWidget(self.pushButton2, row, 1, 1, 1)        
+        self.gridLayout.addWidget(self.pushButton2, row, 1, 1, 1)
+
+    def solve(self):
+        variables = self.get_variables()
+        constraints = self.get_constraints()
+        matrix = []
+        for i in range(0, constraints +1):
+            row = []
+            for j in range(0, variables +3):
+                row.append(0)
+            matrix.append(row)
+        ##U
+        for i in range(1, variables+1):
+            mon = self.monomials[i-1]
+            value = int(mon.coefficient.text())
+            if(mon.signo.currentText() == "-"):
+                value *=-1
+            matrix[0][i] = value
+        #constraints
+        for i in range(1, constraints +1):
+            const = self.list_constraints[i-1]
+
+            for j in range(1, variables+1):
+                mon = const.monomials[j-1]
+                value = int(mon.coefficient.text())
+                if(mon.signo.currentText() == "-"):
+                    value *=-1
+                matrix[i][j] = value
+            
+            j = variables +1
+            ope = const.operator.currentText()
+            matrix[i][j] = ope
+        
+            j += 1
+            value = int(const.value.coefficient.text())
+            if(const.value.signo.currentText() == "-"):
+                value *=-1
+            matrix[i][j] = value
+        print(matrix)
+
+       
+        
+
+
+
+
 
 
  
