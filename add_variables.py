@@ -60,9 +60,10 @@ def add_variables(matrix, minmax):
     zero_row.append(0)
     new_matrix.insert(0,zero_row)
     new_matrix = add_variables_aux(new_matrix)
-    return new_matrix
+    return new_matrix, variables
 
 def multiply_row(scalar, row):
+    M = sym.Symbol('M')
     res = []
     for n in row:
         res.append(n*scalar)
@@ -119,4 +120,5 @@ def main():
     print("\nPrueba 2: ", add_variables(test_matrix_excess, "min"))
     print(variables)
 
-main()
+if __name__ == "__main__":
+    main()
