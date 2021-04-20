@@ -6,7 +6,7 @@ M = sym.Symbol('M')
 
 def big_m(matrix, minmax):
     matrix, variables = add_variables(matrix, minmax)
-
+    
     variables_amount = len(matrix[0]) -2
     restrictions_amount = len(matrix) -1
     degrees_freedom = variables_amount - restrictions_amount
@@ -14,17 +14,26 @@ def big_m(matrix, minmax):
     if (minmax == "min"):
         ''' transforma a maximizacion para el metodo simplex tabular '''
         matrix[0] = multiply_row(-1, matrix[0]) 
-
+    
     len_zero_row = len(matrix[0])
-    ''' quitar las variables artificiales de la fila cero utilizando operaciones gauss-jordan '''
-    for index in range(len_zero_row):
+    ''' si tengo variables de exceso, cada una hace que tenga una columna más que filas,
+    entonces tengo que restar esa posicion para saber en cual fila esta la artificial
+    que corresponde a la M encontrada '''
+    amount_excess_variables = 0
+
+    ''' quitar las variables artificiales de la fila cero utilizando operaciones gauss-jordan 
+        al rango le quito 1 porque sé que la última columna no interesa '''
+    for index in range(len_zero_row-1):
         zero_row = matrix[0]
+        if (variables[index] == "excess"):
+            amount_excess_variables += 1
+            continue
         if (zero_row[index] ==  M):
             '''
             Multiplico por M la fila donde esta la variable artificial.
             Esto como parte de la operacion gauss-jordan.
             '''
-            multiplied_row = multiply_row(M, matrix[index-2])
+            multiplied_row = multiply_row(M, matrix[index-2-amount_excess_variables])
 
             '''
             Le resto a la fila 0 la fila con la variable artificial, esto
@@ -37,7 +46,7 @@ def big_m(matrix, minmax):
             matrix.pop(1) 
 
     matrix = add_basic_variables(matrix, degrees_freedom, variables)
-    #print(matrix)
+    #print('matrix ', matrix, '\n')
     #optimal_solution_matrixes = llamar metodo simplex que me retorna la matriz con solucion optima (o matrices)
 
     #ARREGLO DE MATRICES PROVISIONAL PARA PROBAR CODIGO
@@ -64,8 +73,8 @@ def subtract_rows(row1, row2):
 def add_basic_variables(matrix, degrees_freedom, variables):
     row_basic_variable = 1
     
-    for index_variables in range(degrees_freedom+1, len(variables)):
-        if (variables[index_variables] != "excess"):
+    for index_variables in range(degrees_freedom, len(variables)):
+        if (variables[index_variables] != "excess" and variables[index_variables] != "x"):
             ''' lo almacenado en esa columna es cero, entonces le suma el numero de variable '''
             matrix[row_basic_variable][0] += index_variables 
             row_basic_variable += 1
@@ -103,7 +112,11 @@ def main():
     matrixes, solutions = big_m(test_matrix, "max")
     print('SOLUCION OPTIMA:', solutions)
 
+    '''
     test_matrix_excess = [[0, 0.4, 0.5, 0, 0], [0, 0.3, 0.1, "<=", 2.7], [0, 0.5, 0.5, "=", 6], [0, 0.6, 0.4, ">=", 6]]
-    #test2 = big_m(test_matrix_excess, "min") ¡¡¡¡LA FILA CERO DA UN RESULTADO MALO, CORREGIR!!!!
+    matrixes, solutions = big_m(test_matrix_excess, "min")
+    print(matrixes)
+    print('SOLUCION OPTIMA:', solutions)
+    '''
 
 main()

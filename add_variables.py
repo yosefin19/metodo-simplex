@@ -53,6 +53,7 @@ def add_variables(matrix, minmax):
                 elif (matrix[row][col] == ">="):
                     variables.append("excess")
                     variables.append("artificial")
+                    zero_row.append(0)
                     zero_row.append(M * minmax_val)
             else:
                 new_row.append(matrix[row][col])
