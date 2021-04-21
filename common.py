@@ -24,3 +24,19 @@ def get_pivot_column(matrix):
             value = matrix[0][column]
             pivot_column = column
     return pivot_column
+
+def multiply_row(row, scalar):
+    n_row = []
+    n_row.append(row[0])
+    for i in range(1,len(row)):
+        n_row.append(float("{0:.4f}".format(row[i]*scalar)))
+    return n_row
+
+
+def subtract_row(row, row2):
+    n_row = []
+    n_row.append(row[0])
+    for i in range(1,len(row)):
+        n_row.append(float("{0:.4f}".format(row[i]-row2[i])))
+    
+    return n_row
