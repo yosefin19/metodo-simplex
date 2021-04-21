@@ -5,7 +5,6 @@ from monomial import *
 
 class ui_main_window(object): 
 
-    matrix = []
     monomials = []
     list_constraints = []
 
@@ -93,9 +92,6 @@ class ui_main_window(object):
     def get_variables(self):  
         return int(self.variables.text())
     
-    def get_matrix(self):
-        return self.matrix
-
     def get_monomials(self):
         return self.monomials
 
@@ -110,7 +106,7 @@ class ui_main_window(object):
         self.variable.setObjectName("u")
         self.variable.setText("U")
         self.gridLayout.addWidget(self.variable, 5 , 0 , 1, 1)
-        #
+
         self.variable = QtWidgets.QLabel(self.centralwidget)
         self.variable.setObjectName("=")
         self.variable.setText("=")
@@ -167,8 +163,8 @@ class ui_main_window(object):
             column += 1
             self.gridLayout.addWidget(mono.coefficient, row, column, 1, 1)
             row +=1
-            rest.value = mono
 
+            rest.value = mono
             self.list_constraints.append(rest)
 
         self.pushButton2 = QtWidgets.QToolButton(self.centralwidget)
@@ -188,7 +184,7 @@ class ui_main_window(object):
         ##U
         for i in range(1, variables+1):
             mon = self.monomials[i-1]
-            value = int(mon.coefficient.text())
+            value = float(mon.coefficient.text())
             if(mon.signo.currentText() == "-"):
                 value *=-1
             matrix[0][i] = value
@@ -198,7 +194,7 @@ class ui_main_window(object):
 
             for j in range(1, variables+1):
                 mon = const.monomials[j-1]
-                value = int(mon.coefficient.text())
+                value = float(mon.coefficient.text())
                 if(mon.signo.currentText() == "-"):
                     value *=-1
                 matrix[i][j] = value
@@ -208,11 +204,11 @@ class ui_main_window(object):
             matrix[i][j] = ope
         
             j += 1
-            value = int(const.value.coefficient.text())
+            value = float(const.value.coefficient.text())
             if(const.value.signo.currentText() == "-"):
                 value *=-1
             matrix[i][j] = value
-        print(matrix)
+        return matrix
 
        
         

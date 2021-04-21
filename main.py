@@ -1,4 +1,6 @@
 from ui_main_window import *
+from add_variables import *
+from simplex import *
 import sys
 
 matrix = []
@@ -9,8 +11,6 @@ bool_file =  False
 option = ""
 
 def set_global():
-    global matrix 
-    matrix = application.get_matrix()
     global method 
     method = application.get_method()
     global variables 
@@ -24,12 +24,17 @@ def set_global():
 
 def add_constrains():
     application.add_constrains()
-    application.pushButton2.clicked.connect(solve) 
+    application.pushButton2.clicked.connect(solve)
+
 
 
 def solve():
-    application.solve()
+    global matrix 
+    matrix = application.solve()
     set_global()
+
+
+
 
 
 if __name__ == "__main__":

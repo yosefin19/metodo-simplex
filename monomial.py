@@ -12,8 +12,8 @@ class constrains():
     def __init__(self,centralwidget):
         self.monomials = []
         self.operator = QtWidgets.QComboBox(centralwidget)
-        self.operator.addItem("<")
-        self.operator.addItem(">")
+        self.operator.addItem("<=")
+        self.operator.addItem(">=")
         self.operator.addItem("=")
         self.value = monomial(centralwidget)
     
