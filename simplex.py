@@ -9,7 +9,8 @@ def simplex(matrix):
         if optimo(matrix) == True:
             optima = True
         else:
-            coefficients = []
+            coefficients = [] #-----------------no es necesario declarar esto primero
+            #--------------aqui llama a is_unbounded(), hay que terminar programa y lanzar resultado de U no acotada si lo es
             row, column, number, coefficients = pivot(matrix)            
             #dividir la fila del pivot entre el pivot
             for i in range(1,len(matrix[1])):
@@ -77,6 +78,7 @@ def pivot(matrix):
     for i in range (1, lenm):
         if(matrix[i][column] <= 0):
             continue
+        #-------------------si hace un continue me parece que el else no hace falta 
         else:
             x = matrix[i][lenc-1]/matrix[i][column]
             coefficients.append(x)
