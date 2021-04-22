@@ -1,7 +1,9 @@
+import sympy as sym
 import math
 from common import *
 from copy import copy
 
+M = sym.Symbol('M')
 
 '''
 Funcion principal del metodo simplex que maneja si la solucion es optima y si es multiple
@@ -38,7 +40,7 @@ def simplex(matrix, variables):
         #Si la solucion no es optima se verifica si es acotada, de no serlo se realiza una nueva iteracion del metodo simplex 
         else:
             #Si la solucion es acotada se termina el procedimiento y se retorna la matriz 
-            if is_unbounded(matrix):
+            if is_unbounded(new_matrix):
                 #print("acotada")
                 return solution
             else:
@@ -63,7 +65,8 @@ def simplex_aux(matrix, pivot_second_optimal_solution = 0):
     #dividir la fila del pivot entre el pivot
     for i in range(1,len(matrix[1])):
         if matrix[row][i]!=0:
-            matrix[row][i] = float("{0:.3f}".format(matrix[row][i]/number))
+            '''matrix[row][i] = float("{0:.3f}".format(matrix[row][i]/number)) devolver'''
+            matrix[row][i] = matrix[row][i]/number
     #Transformacion de la matriz
     for i in range(0, len(matrix)):
         if i != row:
@@ -91,12 +94,16 @@ def pivot(matrix, pivot_second_optimal_solution):
     if pivot_second_optimal_solution>0:
         column = pivot_second_optimal_solution
     else:
+        column = get_pivot_column(matrix)
+        '''
         #Se busca el nuevo pivote
         for i in range(1, len_c):
             #Si el valor en la matriz es menor al guardado anteriormente se cambia y se guarda el numero de columna
+            temp = change_m_value(matrix[0][i]) #hay que hacer lo mismo que en columna pivot o usar columna pivot
             if matrix[0][i] < value:
                 value = matrix[0][i]
                 column = i
+        '''
     #Se inicializa el minimo con un numero pequeno                
     mini = float(1 << 61)
     row = 0
@@ -105,7 +112,8 @@ def pivot(matrix, pivot_second_optimal_solution):
         if(matrix[i][column] <= 0):
             continue
         else:
-            x = float("{0:.4f}".format(matrix[i][len_c]/matrix[i][column]))
+            ''' x = float("{0:.4f}".format(matrix[i][len_c]/matrix[i][column])) devolver'''
+            x = float(matrix[i][len_c]/matrix[i][column])
             if(mini>x):
                 mini = x
                 row = i

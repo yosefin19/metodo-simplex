@@ -1,4 +1,6 @@
-
+import sympy as sym
+import math
+M = sym.Symbol('M')
 
 #se debe llamar antes de la funcion que saca los pivotes
 ''' Si la U es no acotada, el MS termina, y se indica que la U es no acotada '''
@@ -16,30 +18,14 @@ def is_unbounded(matrix):
     
 
 def get_pivot_column(matrix):
-    len_c = len(matrix[0])
-    value = 0
-    pivot_column = 0
-    for column in range(1, len_c):
-        if (matrix[0][column] < value):
-            value = matrix[0][column]
-            pivot_column = column
+    zero_row = change_m_row(matrix[0])
+    zero_row.pop()
+    minimum = min(zero_row)
+    pivot_column = zero_row.index(minimum)
     return pivot_column
 
-def multiply_row(row, scalar):
-    n_row = []
-    n_row.append(row[0])
-    for i in range(1,len(row)):
-        n_row.append(float("{0:.4f}".format(row[i]*scalar)))
-    return n_row
 
-
-def subtract_row(row, row2):
-    n_row = []
-    n_row.append(row[0])
-    for i in range(1,len(row)):
-        n_row.append(float("{0:.4f}".format(row[i]-row2[i])))
-    return n_row
-
+''' establece el valor de las M en mil para poder comparar '''
 def change_m_row(row):
     len_row = len(row)
     new_row = []
@@ -49,3 +35,34 @@ def change_m_row(row):
         else:
             new_row.append(row[i])
     return new_row
+
+
+def change_m_value(value):
+    if(str(value).count('M') > 0):
+        temp = [value]
+        value = temp[0].subs(M,1000)
+    return value
+
+
+def multiply_row(row, scalar):
+    n_row = []
+    n_row.append(row[0])
+    for i in range(1,len(row)):
+        if(str(row[i]).count('M') > 0 or str(scalar).count('M') > 0):
+            n_row.append(row[i]*scalar)
+        else:
+            ''' n_row.append(float("{0:.4f}".format(float(row[i]) * float(scalar)))) devolver'''
+            n_row.append(float(row[i]) * float(scalar))
+    return n_row
+
+
+def subtract_row(row, row2):
+    n_row = []
+    n_row.append(row[0])
+    for i in range(1,len(row)):
+        if(str(row[i]).count('M') > 0 or str(row2[i]).count('M') > 0):
+            n_row.append(row[i]-row2[i])
+        else:
+            ''' n_row.append(float("{0:.4f}".format(float(row[i]) - float(row2[i])))) '''
+            n_row.append(float(row[i]) - float(row2[i]))
+    return n_row

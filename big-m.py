@@ -1,6 +1,7 @@
 import sympy as sym
 from add_variables import add_variables
 from add_variables import multiply_row
+from simplex import simplex
 
 M = sym.Symbol('M')
 
@@ -47,10 +48,10 @@ def big_m(matrix, minmax):
 
     matrix = add_basic_variables(matrix, degrees_freedom, variables)
     #print('matrix ', matrix, '\n')
-    #optimal_solution_matrixes = llamar metodo simplex que me retorna la matriz con solucion optima (o matrices)
+    optimal_solution_matrixes = simplex(matrix, variables)
 
     #ARREGLO DE MATRICES PROVISIONAL PARA PROBAR CODIGO
-    optimal_solution_matrixes = [ [[0, 0, 0, 0, 1.5, M+1, 36], [1, 1, 0, 0, -0.33, 0.5, 2], [3, 0, 0, 1, 0.33, -0.33, 2], [2, 0, 1, 0, 0.5, 0, 6]] ]
+    #optimal_solution_matrixes = [ [[0, 0, 0, 0, 1.5, M+1, 36], [1, 1, 0, 0, -0.33, 0.5, 2], [3, 0, 0, 1, 0.33, -0.33, 2], [2, 0, 1, 0, 0.5, 0, 6]] ]
     
     ''' arreglo de la forma [ [[x1, x2,..., xn], U], [[x1, x2,..., xn], U] ] pueden ser max dos soluciones optimas'''
     optimal_solutions = extract_optimal_solutions(optimal_solution_matrixes)
@@ -108,14 +109,16 @@ def extract_optimal_solutions(optimal_solution_matrixes):
 
 
 def main():
+    '''
     test_matrix = [[0, 3, 5, 0, 0], [0, 1, 0, "<=", 4], [0, 0, 2, "<=", 12], [0, 3, 2, "=", 18]]
     matrixes, solutions = big_m(test_matrix, "max")
+    print(matrixes, '\n')
     print('SOLUCION OPTIMA:', solutions)
-
     '''
+    
     test_matrix_excess = [[0, 0.4, 0.5, 0, 0], [0, 0.3, 0.1, "<=", 2.7], [0, 0.5, 0.5, "=", 6], [0, 0.6, 0.4, ">=", 6]]
     matrixes, solutions = big_m(test_matrix_excess, "min")
-    print(matrixes)
+    print(matrixes, '\n')
     print('SOLUCION OPTIMA:', solutions)
     '''
 
