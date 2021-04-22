@@ -1,5 +1,4 @@
 from PyQt5 import QtGui
-from PyQt5.QtWidgets import QTableWidget, QTableWidgetItem, QVBoxLayout
 from monomial import *
 
 
@@ -28,12 +27,13 @@ class ui_main_window(object):
         self.method.setObjectName("method")
         self.method.addItem("")
         self.method.setItemText(0, "Gran M")
-        self.method.addItem("")
+        self.method.addItem("Gran M")
         self.method.setItemText(1, "Dual")
-        self.method.addItem("")
-        self.method.setItemText(1, "Dos fases")
-        self.method.addItem("")
-        self.method.setItemText(1, "Simplex")
+        self.method.addItem("Dual")
+        self.method.setItemText(2, "Dos fases")
+        self.method.addItem("Dos fases")
+        self.method.setItemText(3, "Simplex")
+        self.method.addItem("Simplex")
         self.gridLayout.addWidget(self.method, 0, 1, 1, 1)
         
             #check file
@@ -235,47 +235,55 @@ class ui_main_window(object):
         return matrix,aux_vars
 
     def solution(self, matrix,sol, position):
-        print(matrix[0])
-        len_c = len(matrix[0]) - 1
-        len_r = len(matrix)
-        self.tableWidget = QTableWidget()
-        # Establece numero de Filas(row)
-        self.tableWidget.setRowCount(len_r)
-        # Establece numero de Columnas(column)
-        self.tableWidget.setColumnCount(len_c)
-        for i in range (0, len_r):
-            for j in range (0, len_c):
-                self.tableWidget.setItem(i, j, QTableWidgetItem(matrix[i][j+1]))    
-                self.gridLayout.addWidget(self.variable, position + i  , j , 1, 1)
-                self.variable = QtWidgets.QLabel(self.centralwidget)
-        position += len_r
+        print(sol)
+        len_solution = len(matrix)
+        len_c = len(matrix[0][0]) - 1
+        len_r = len(matrix[0])
 
-        self.variable = QtWidgets.QLabel(self.centralwidget)
-        self.variable.setObjectName("u")
-        self.variable.setText("Solucion:")
-        self.gridLayout.addWidget(self.variable, position , 0 , 1, 1)
+        for k in range (0, len_solution):
+            new_matrix = matrix[k]
+            for i in range (0, len_r):
 
-        self.variable = QtWidgets.QLabel(self.centralwidget)
-        self.variable.setObjectName("u")
-        self.variable.setText(sol[1])
-        self.gridLayout.addWidget(self.variable, position , 2 , 1, 1)
+                for j in range (0, len_c):
+                    self.matrix = QtWidgets.QLabel(self.centralwidget)
+                    self.matrix.setObjectName("u")
 
-        position +=1
+                    self.matrix.setText(str(new_matrix[i][j+1]))
+                    self.gridLayout.addWidget(self.matrix, position + i, j , 1, 1)
 
-        self.variable = QtWidgets.QLabel(self.centralwidget)
-        self.variable.setObjectName("u")
-        self.variable.setText("U")
-        self.gridLayout.addWidget(self.variable, position , 0 , 1, 1)
+                    
+                
 
-        self.variable = QtWidgets.QLabel(self.centralwidget)
-        self.variable.setObjectName("=")
-        self.variable.setText("=")
-        self.gridLayout.addWidget(self.variable, position , 1 , 1, 1)
+            position += len_r
 
-        self.variable = QtWidgets.QLabel(self.centralwidget)
-        self.variable.setObjectName("=")
-        self.variable.setText(sol[2])
-        self.gridLayout.addWidget(self.variable, position , 1 , 1, 1)
+            self.variable = QtWidgets.QLabel(self.centralwidget)
+            self.variable.setObjectName("u")
+            self.variable.setText("Solucion:")
+            self.gridLayout.addWidget(self.variable, position , 0 , 1, 1)
+
+            self.variable = QtWidgets.QLabel(self.centralwidget)
+            self.variable.setObjectName("u")
+            self.variable.setText(str(sol[k][0]))
+            self.gridLayout.addWidget(self.variable, position , 2 , 1, 1)
+
+            position +=1
+
+            self.variable = QtWidgets.QLabel(self.centralwidget)
+            self.variable.setObjectName("u")
+            self.variable.setText("U")
+            self.gridLayout.addWidget(self.variable, position , 0 , 1, 1)
+
+            self.variable = QtWidgets.QLabel(self.centralwidget)
+            self.variable.setObjectName("=")
+            self.variable.setText("=")
+            self.gridLayout.addWidget(self.variable, position , 1 , 1, 1)
+
+            self.variable = QtWidgets.QLabel(self.centralwidget)
+            self.variable.setObjectName("=")
+            self.variable.setText(str(sol[k][1]))
+            self.gridLayout.addWidget(self.variable, position , 2 , 1, 1)
+            
+            position += 1
 
         
         

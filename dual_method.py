@@ -2,12 +2,12 @@ import numpy as np
 from two_phase import *
 
 
-def primal_to_dual(matrix,minmax):
-    vars = []
+def primal_to_dual(matrix,vars, minmax):
+    #vars = []
     lent = len(matrix[0])-3
-    for i in range(0,lent):
-        vars.append('>=')
-    print(vars)
+    #for i in range(0,lent):
+     #   vars.append('>=')
+    #print(vars)
     #se procede a transponer la matriz
     new_matrix = [] #matriz para retornar la matriz
     new_constraints = matrix[0][1:-2] #la fila 0 representa la funcion objetivo, estos valores seran el nuevo lado derecho de las restricciones
