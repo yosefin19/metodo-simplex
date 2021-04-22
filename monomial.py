@@ -16,6 +16,15 @@ class constrains():
         self.operator.addItem(">=")
         self.operator.addItem("=")
         self.value = monomial(centralwidget)
+
+class no_negativity():
+    def __init__(self,centralwidget):
+        self.monomials = []
+        self.operator = QtWidgets.QComboBox(centralwidget)
+        self.operator.addItem("<=")
+        self.operator.addItem(">=")
+        self.operator.addItem("-")
+        self.value = monomial(centralwidget)
     
     def get_monomials(self):
         return self.monomials

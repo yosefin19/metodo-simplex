@@ -7,6 +7,7 @@ class ui_main_window(object):
 
     monomials = []
     list_constraints = []
+    vars = []
 
     def setup_ui(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -98,6 +99,9 @@ class ui_main_window(object):
     
     def get_monomials(self):
         return self.monomials
+    
+    def get_vars(self):
+        return self.vars
 
     def get_constrains(self):
         return self.list_constraints
@@ -105,6 +109,7 @@ class ui_main_window(object):
     def add_constrains(self):
         constraints = self.get_constraints()
         variables = self.get_variables()
+        vars = self.get_vars()
         #U
         self.variable = QtWidgets.QLabel(self.centralwidget)
         self.variable.setObjectName("u")
@@ -123,6 +128,7 @@ class ui_main_window(object):
             mono = monomial(self.centralwidget)
 
             self.gridLayout.addWidget(mono.signo, 5 , column, 1, 1)
+            self.gridLayout.addWidget(cons.operator, 6 , column, 1, 1)
             column += 1
 
             self.gridLayout.addWidget(mono.coefficient, 5 , column, 1, 1)
@@ -133,9 +139,11 @@ class ui_main_window(object):
             self.variable.setText(variable)
             self.gridLayout.addWidget(self.variable, 5 , column , 1, 1)
             column += 1
+
+            self.vars.append(cons)
             self.monomials.append(mono)
 
-        row = 6
+        row = 7
 
         #constraints
         for i in range (1, constraints+1):
@@ -180,6 +188,14 @@ class ui_main_window(object):
     def solve(self):
         variables = self.get_variables()
         constraints = self.get_constraints()
+        vars = self.get_vars()
+
+
+        aux_vars = []
+        for i in vars:
+            aux_vars.append(i.operator.currentText())
+   
+
         matrix = []
         for i in range(0, constraints +1):
             row = []
@@ -213,7 +229,8 @@ class ui_main_window(object):
             if(const.value.signo.currentText() == "-"):
                 value *=-1
             matrix[i][j] = value
-        return matrix
+
+        return matrix,aux_vars
 
     def solution(self, matrix,sol, position):
         print(matrix[0])

@@ -1,8 +1,13 @@
 import numpy as np
+from two_phase import *
 
 
-
-def primal_to_dual(matrix,vars,minmax):
+def primal_to_dual(matrix,minmax):
+    vars = []
+    lent = len(matrix[0])-3
+    for i in range(0,lent):
+        vars.append('>=')
+    print(vars)
     #se procede a transponer la matriz
     new_matrix = [] #matriz para retornar la matriz
     new_constraints = matrix[0][1:-2] #la fila 0 representa la funcion objetivo, estos valores seran el nuevo lado derecho de las restricciones
@@ -23,15 +28,15 @@ def primal_to_dual(matrix,vars,minmax):
     ####----------------------
     for i in vars: ##se realizan los cambios de acuerdo a la tabla de operadores
             if(minmax == 'min'):
-                if(i == '=>'):
+                if(i == '>='):
                     new_operators.append('<=')
                 elif(i == '-'):
                     new_operators.append('=')
                 elif(i == '<='):
-                    new_operators.append('=>')
+                    new_operators.append('>=')
             else:
-                if(i == '=>'):
-                    new_operators.append('=>')
+                if(i == '>='):
+                    new_operators.append('>=')
                 elif(i == '-'):
                     new_operators.append('=')
                 elif(i == '<='):
@@ -40,19 +45,19 @@ def primal_to_dual(matrix,vars,minmax):
     new_vars = []
     for i in cons:
         if(minmax == 'min'):
-            if(i == '=>'):
-                new_vars.append('=>')
+            if(i == '>='):
+                new_vars.append('>=')
             if(i == '='):
                 new_vars.append('-')
             elif(i =='<='):
                 new_vars.append('<=')
         else:
-            if(i == '=>'):
+            if(i == '>='):
                 new_vars.append('<=')
             elif(i =='='):
                 new_vars.append('-')
             elif(i =='<='):
-                new_vars.append('=>')
+                new_vars.append('>=')
 
     new_matrix.append(values) ##se crea cada nueva restriccion de acuerdo a la camtidad de variables
     for i in range(0,len(new_operators)):
@@ -62,24 +67,31 @@ def primal_to_dual(matrix,vars,minmax):
         new_constraint.append(new_operators[i])
         new_constraint.append(new_constraints[i])
         new_matrix.append(new_constraint)
+    
+    #print_matrix(new_matrix)
+    final,sol = two_phases_method(new_matrix,minmax)
 
-    print('fila 0 nueva')
-    print(values)
-    print('columna ultima nueva:')
-    print(new_constraints)
-    print('transpuesta')
-    print(a)
-    print('operadores de variables nuevas')
-    print(new_vars)
-    print('operadores de restricciones nuevas')
-    print(new_operators)
+    return final,sol
+    
+    
 
 
-    print('MATRIX')
            
-    ###Se debe utilizar Dos Fases o La Gran M
-    print(new_matrix)
+    
 
     ###OJO las soluciones se encuentran en la fila 0 de la ultima iteracion, hablar con las chiquillas
 
 
+#ejemplo: quiz 1 
+#primal_to_dual([[0,-5,-15,0,0],[0,2,1,'=>',12],[0,-4,3,'=>',9]],['=>','=>'],'min')
+#primal_to_dual([[0, 12, 9, 0, 0], [0, 2, -4, '<=', -5], [0, 1, 3, '<=', -15]],['=>', '=>'],'max')
+
+#ejemplo: quiz 2 
+#primal_to_dual([[0,2,3,-6,0,0],[0,1,-1,2,'<=',8],[0,2,4,1,'=',2],[0,-2,1,0,'=',6],[0,0,-4,3,'<=',11]],['=>','<=','-'],'max')
+#primal_to_dual([[0, 8, 2, 6, 11, 0, 0], [0, 1, 2, -2, 0, '=>', 2], [0, -1, 4, 1, -4, '<=', 3], [0, 2, 1, 0, 3, '=', -6]],'max')
+
+
+#ejemplo: diapositivas primal_to_dual([[0,3,5,0,0],[0,1,0,'<=',4],[0,0,2,'<=',12],[0,3,2,'<=',18]],['=>','=>'],'max')
+#primal_to_dual([[0,0.4,0.5,0,0],[0,0.3,0.1,'<=',2.7],[0,0.5,0.5,'=',6],[0,0.6,0.4,'=>',6]],['=>','=>'],'min')
+#primal_to_dual([[0,5,12,4,0,0],[0,1,2,1,'<=',10],[0,2,-1,3,'=',8]],['=>','=>','=>'],'max')
+#[0,0,-4,3,'<=',11]
