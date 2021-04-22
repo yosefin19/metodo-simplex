@@ -126,6 +126,7 @@ class ui_main_window(object):
         column = 2
         for u in range (1, variables+1):
             mono = monomial(self.centralwidget)
+            cons = no_negativity(self.centralwidget) 
 
             self.gridLayout.addWidget(mono.signo, 5 , column, 1, 1)
             self.gridLayout.addWidget(cons.operator, 6 , column, 1, 1)
@@ -153,7 +154,8 @@ class ui_main_window(object):
             column = 0
             monos = []
             for j in range (1, variables+1):
-                mono = monomial(self.centralwidget) 
+                mono = monomial(self.centralwidget)
+                
                 self.gridLayout.addWidget(mono.signo, row , column, 1, 1)
                 column += 1
                 self.gridLayout.addWidget(mono.coefficient, row , column, 1, 1)
