@@ -106,20 +106,3 @@ def extract_optimal_solutions(optimal_solution_matrixes):
         solution.append(U)
         optimal_solutions.append(solution)
     return optimal_solutions
-
-
-def main():
-    '''
-    test_matrix = [[0, 3, 5, 0, 0], [0, 1, 0, "<=", 4], [0, 0, 2, "<=", 12], [0, 3, 2, "=", 18]]
-    matrixes, solutions = big_m(test_matrix, "max")
-    print(matrixes, '\n')
-    print('SOLUCION OPTIMA:', solutions)
-    '''
-    
-    test_matrix_excess = [[0, 0.4, 0.5, 0, 0], [0, 0.3, 0.1, "<=", 2.7], [0, 0.5, 0.5, "=", 6], [0, 0.6, 0.4, ">=", 6]]
-    matrixes, solutions = big_m(test_matrix_excess, "min")
-    print(matrixes, '\n')
-    print('SOLUCION OPTIMA:', solutions)
-    '''
-
-main()

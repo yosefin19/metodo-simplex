@@ -72,12 +72,14 @@ def simplex_aux(matrix, pivot_second_optimal_solution = 0):
         if i != row:
             auxmat = matrix[i]
             matrix[i] = subtract_row(auxmat, multiply_row(matrix[row], matrix[i][column]))
-    #Escritura en archivo
-    write_simplex(matrix, matrix[row][0], column, number)
-    #Mostrar el progreso en consola
-    #print_solution(matrix, matrix[row][0], column, number)
+    old = matrix[row][0],
     #Cambio de las Variablas Basicas
     matrix[row][0] = column
+    #Escritura en archivo
+    write_simplex(matrix, old, column, number)
+    #Mostrar el progreso en consola
+    #print_solution(matrix, matrix[row][0], column, number)
+   
     return matrix
 
 
@@ -251,27 +253,3 @@ def write_simplex(matrix, old, new, number):
     file.write("\n\n")
     file.close()
 
-
-
-'''
-Pruebas
-'''
-#def main():
-
- #   test_matrix = [[0, -3, -5, 0, 0, 0, 0], [0, 1, 0, 1, 0, 0, 4], [0, 0, 2, 0, 1, 0, 12], [0, 3, 2, 0, 0, 1, 18]] 
-  #  var2 = [0, 'x', 'x', 'slack', 'slack','slack']
-
-   # matrix2 = [[0, -5, -2, 0, 0, 0],[3, 3, 1, 1, 0, 2],[4, 4, 2, 0, 1 ,2]]
-
-    #matrix3 = [[0, -2, -4, 0, 0, 0], [3, 1, 2, 1, 0, 5], [4, 1, 1, 0, 1, 4]] var = [0, 'x', 'x', 'slack', 'slack']
-
-  #  m = [[0, -1.1, -0.9, 0, 0, 1, 0, -12],[3, 0.3, 0.1, 1, 0, 0, 0, 2.7],[4, 0.5, 0.5, 0, 1, 0, 0, 6],[6, 0.6, 0.4, 0, 0, -1, 1, 6]]
-   # v = [0, 'x', 'x','slack','artificial', 'excess', 'artificial']
-    
-    #mat, sol = simplex(m, v)
-    #print("--------------------")
-    #print(mat)
-    #simplex(test_matrix, var2)
-    #simplex(matrix3, var)
-
-#main()

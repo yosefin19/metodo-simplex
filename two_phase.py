@@ -3,9 +3,7 @@ from simplex import simplex
 
 
 
-test_matrix = [[0,0.4,0.5,0,0],[0,0.3,0.1,'<=',2.7],[0,0.5,0.5,'=',6],[0,0.6,0.4,'>=',6]]
 
-test =[[0,2,3,4,0,0],[0,3,2,1,'<=',10],[0,2,3,3,'<=',15],[0,1,1,-1,'>=',4]]
 
 def two_phases_method(matrix,minmax):
     original_u = matrix[0] ## se necesita la funcion objetivo original para la segunda fase
@@ -235,19 +233,3 @@ def print_matrix(matrix):
     for i in matrix:
         print(i)
 
-
-two_phases_method(test,'max')
-
-#test_matrix = [[0, -3, -5, 0, 0, 0, 0], [0, 1, 0, 1, 0, 0, 4], [0, 0, 2, 0, 1, 0, 12], [0, 3, 2, 0, 0, 1, 18]] 
-#var2 = [0, 'x', 'x', 'slack', 'slack','slack']
-
-#matrix2 = [[0, -5, -2, 0, 0, 0],[3, 3, 1, 1, 0, 2],[4, 4, 2, 0, 1 ,2]]
-
-#matrix3 = [[0, -2, -4, 0, 0, 0], [3, 1, 2, 1, 0, 5], [4, 1, 1, 0, 1, 4]]
-#var = [0, 'x', 'x', 'slack', 'slack']
-
-#m = [[0, -1.1, -0.9, 0, 0, 1, 0, -12],[3, 0.3, 0.1, 1, 0, 0, 0, 2.7],[4, 0.5, 0.5, 0, 1, 0, 0, 6],[6, 0.6, 0.4, 0, 0, -1, 1, 6]]
-#v = [0, 'x', 'x','slack','artificial', 'excess', 'artificial']
-    
-#mat, sol = simplex(m, v)
-#print(mat)
