@@ -32,8 +32,6 @@ class ui_main_window(object):
         self.method.addItem("Dual")
         self.method.setItemText(2, "Dos fases")
         self.method.addItem("Dos fases")
-        self.method.setItemText(3, "Simplex")
-        self.method.addItem("Simplex")
         self.gridLayout.addWidget(self.method, 0, 1, 1, 1)
         
             #check file

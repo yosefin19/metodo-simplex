@@ -1,6 +1,6 @@
 import sympy as sym
-from add_variables import add_variables
-from add_variables import multiply_row
+from add_var import add_var
+from add_var import multiply_row
 from simplex import simplex
 
 M = sym.Symbol('M')
@@ -8,7 +8,7 @@ M = sym.Symbol('M')
 ''' Se encarga de resolver un problema por medio del método
 de la gran M '''
 def big_m(matrix, minmax):
-    matrix, variables = add_variables(matrix, minmax)
+    matrix, variables = add_var(matrix, minmax)
     
     variables_amount = len(matrix[0]) -2
     restrictions_amount = len(matrix) -1

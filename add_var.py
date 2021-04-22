@@ -11,7 +11,7 @@ es por esta razon que la posicion cero se rellena con 0.
 '''
 variables = []
 
-def add_variables(matrix, minmax):
+def add_var(matrix, minmax):
     global variables
     variables = []
 
@@ -110,16 +110,3 @@ def add_variables_aux(matrix):
         else:
             j += 1
     return matrix
-
-
-def main():
-    global variables
-    test_matrix = [[0, 3, 5, 0, 0], [0, 1, 0, "<=", 4], [0, 0, 2, "<=", 12], [0, 3, 2, "<=", 18]] #simbolo está en col_len - 2 
-    test_matrix_excess = [[0, 0.4, 0.5, 0, 0], [0, 0.3, 0.1, "<=", 2.7], [0, 0.5, 0.5, "=", 6], [0, 0.6, 0.4, ">=", 6]]
-    print("Prueba 1: ", add_variables(test_matrix, "max"))
-    #print(variables)
-    #print("\nPrueba 2: ", add_variables(test_matrix_excess, "min"))
-    #print(variables)
-
-if __name__ == "__main__":
-    main()
