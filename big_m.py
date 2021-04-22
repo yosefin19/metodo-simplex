@@ -5,6 +5,8 @@ from simplex import simplex
 
 M = sym.Symbol('M')
 
+''' Se encarga de resolver un problema por medio del método
+de la gran M '''
 def big_m(matrix, minmax):
     matrix, variables = add_variables(matrix, minmax)
     
@@ -47,12 +49,8 @@ def big_m(matrix, minmax):
             matrix.pop(1) 
 
     matrix = add_basic_variables(matrix, degrees_freedom, variables)
-    #print('matrix ', matrix, '\n')
     optimal_solution_matrixes = simplex(matrix, variables)
-
-    #ARREGLO DE MATRICES PROVISIONAL PARA PROBAR CODIGO
-    #optimal_solution_matrixes = [ [[0, 0, 0, 0, 1.5, M+1, 36], [1, 1, 0, 0, -0.33, 0.5, 2], [3, 0, 0, 1, 0.33, -0.33, 2], [2, 0, 1, 0, 0.5, 0, 6]] ]
-    
+ 
     ''' arreglo de la forma [ [[x1, x2,..., xn], U], [[x1, x2,..., xn], U] ] pueden ser max dos soluciones optimas'''
     optimal_solutions = extract_optimal_solutions(optimal_solution_matrixes)
 
@@ -62,8 +60,9 @@ def big_m(matrix, minmax):
             optimal_solutions[i][1] *= -1
 
     return optimal_solution_matrixes, optimal_solutions
+ 
             
-
+''' Resta dos filas'''
 def subtract_rows(row1, row2):
     res_row = []
     for i in range(len(row1)):
@@ -71,6 +70,7 @@ def subtract_rows(row1, row2):
     return res_row
 
 
+'''Agrega las variables basicas a la columna cero '''
 def add_basic_variables(matrix, degrees_freedom, variables):
     row_basic_variable = 1
     
@@ -83,6 +83,7 @@ def add_basic_variables(matrix, degrees_freedom, variables):
     return matrix
 
 
+''' Extrae la solucion optima con un formato determinado para ser mostrado'''
 def extract_optimal_solutions(optimal_solution_matrixes):
     optimal_solutions = []
 

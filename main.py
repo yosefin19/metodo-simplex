@@ -4,6 +4,7 @@ from big_m import *
 from two_phase import *
 from dual_method import *
 import sys
+from os import remove
 
 matrix = []
 method = ""
@@ -56,7 +57,8 @@ def solve():
         solution = extract_optimal_solutions(new_matrix)
     
     application.solution(new_matrix, solution, position)
-    
+    if not bool_file:
+        remove("Solucion.txt")
 
 
 

@@ -4,12 +4,16 @@ from common import *
 from copy import copy
 
 M = sym.Symbol('M')
+''' 0 si no es degenerada, 1 si lo es '''
+degenerate = 0
 
 '''
 Funcion principal del metodo simplex que maneja si la solucion es optima y si es multiple
 Se tiene un arreglo de solucion por la posibilidad de soluciones multiples
 '''
 def simplex(matrix, variables):
+    global degenerate
+    degenerate = False
     solution = []
     iteration = 1
     optimal = False
@@ -41,7 +45,7 @@ def simplex(matrix, variables):
         else:
             #Si la solucion es acotada se termina el procedimiento y se retorna la matriz 
             if is_unbounded(new_matrix):
-                #print("acotada")
+                write_unbounded(new_matrix)
                 return solution
             else:
                 #Se escriba la nueva iteracion
@@ -58,7 +62,6 @@ Por ultimo, se agregan la tabla con los cambios en el archivo si este es solicit
 En caso de existir multiples soluciones se utiliza un segundo parametro opcional para indicar la columna pivot de la segunda solucion
 '''   
 def simplex_aux(matrix, pivot_second_optimal_solution = 0):
-
     row, column, number = pivot(matrix, pivot_second_optimal_solution)   
     #print(row, column, number)  
            
@@ -79,7 +82,7 @@ def simplex_aux(matrix, pivot_second_optimal_solution = 0):
     write_simplex(matrix, old, column, number)
     #Mostrar el progreso en consola
     #print_solution(matrix, matrix[row][0], column, number)
-   
+
     return matrix
 
 
@@ -92,20 +95,13 @@ def pivot(matrix, pivot_second_optimal_solution):
     len_c = len(matrix[0])-1
     value = 0
     column = -1
+    coefficients = []
+    coefficients_aux = []
     #Se verifica si es el pivote de una solucion multiple
     if pivot_second_optimal_solution>0:
         column = pivot_second_optimal_solution
     else:
         column = get_pivot_column(matrix)
-        '''
-        #Se busca el nuevo pivote
-        for i in range(1, len_c):
-            #Si el valor en la matriz es menor al guardado anteriormente se cambia y se guarda el numero de columna
-            temp = change_m_value(matrix[0][i]) #hay que hacer lo mismo que en columna pivot o usar columna pivot
-            if matrix[0][i] < value:
-                value = matrix[0][i]
-                column = i
-        '''
     #Se inicializa el minimo con un numero pequeno                
     mini = float(1 << 61)
     row = 0
@@ -116,14 +112,19 @@ def pivot(matrix, pivot_second_optimal_solution):
         else:
             ''' x = float("{0:.4f}".format(matrix[i][len_c]/matrix[i][column])) devolver'''
             x = float(matrix[i][len_c]/matrix[i][column])
+            coefficients.append(x)
+            coefficients_aux.append([i,matrix[i][column]])
             if(mini>x):
                 mini = x
                 row = i
+    degenerate_row = is_degenerate(coefficients, coefficients_aux)
+    if (degenerate == 1):
+        row = degenerate_row
     #Se retorna la fila, columna y numero pivote
     return row, column, matrix[row][column]
 
 
-
+'''Imprime la solucion en consola '''
 def print_solution(matrix, old, new, number):
     print("Matriz: \n")
     for i in range(0, len(matrix)):
@@ -132,7 +133,10 @@ def print_solution(matrix, old, new, number):
     print("VB Entrante:", new, "\n")
     print("VB Saliente:", old, "\n")
     print("Numero pivot:", number, "\n")
-    print("Solucion:\n")
+    if (degenerate == 1):
+        print("Solucion degenerada:\n")
+    else:
+        print("Solucion:\n")
     sol = [0]*(len(matrix[0])-2)
     for i in range(1,len(matrix)):
         index = matrix[i][0] -1
@@ -155,14 +159,53 @@ def optimal_solution(matrix, variables):
         return True
 
 '''
-Verifica si la solucion optima actual es multiple, utiliza el conjunto de variables para asegurar que verifique estrictamente las que se deben
+Verifica si la solucion optima actual es multiple, utiliza el conjunto 
+de variables para asegurar que verifique estrictamente las que se deben
 '''
 def multiple_solutions(matrix, variables):
-    x = variables.count('x') + 2
-    for i in range(x, len(matrix[0])-1):
-        if matrix[0][i] == 0:
-            return True, i
+    len_c = len(matrix[0])
+    basic_variables = get_basic_variables(matrix)
+
+    for column in range(1,len_c):
+        if (matrix[0][column] == 0 and basic_variables[column] != 'basic'):
+            return True, column
     return False, 0
+
+
+''' Retorna un arreglo que indica las variables básicas '''
+def get_basic_variables(matrix):
+    len_c = len(matrix[0])
+    len_matrix = len(matrix)
+    basic_variables = [' '] * (len_c-1)
+    for row in range(1,len_matrix):
+        basic_variable = matrix[row][0]
+        basic_variables.pop(basic_variable)
+        basic_variables.insert(basic_variable, 'basic')
+    return basic_variables
+
+
+''' Determina si una solución es degenerada '''
+def is_degenerate(coefficients, coefficients_aux):
+    len_coefficients = len(coefficients)
+    global degenerate
+
+    mini = min(coefficients)
+    indexes = [i for i, x in enumerate(coefficients) if x == mini]
+
+    len_indexes = len(indexes)
+    if (len_indexes == 1):
+        degenerate = 0
+        return coefficients_aux[indexes[0]][0]
+    degenerate = 1
+    max_divider = coefficients_aux[indexes[0]][1]
+    pivot_row = coefficients_aux[indexes[0]][0]
+    for i in range(1,len_indexes):
+        temp = coefficients_aux[indexes[i]][1]
+        if (temp > max_divider):
+            max_divider = temp
+            pivot_row = coefficients_aux[indexes[i]][0]
+    return pivot_row
+
 
 '''
 Escribe en el archivo de texto la solucion inicial
@@ -210,6 +253,7 @@ def write_unbounded(matrix):
     file.write("\n\n")
     file.close()
 
+
 '''
 Escribe en el archivo de texto el numerode iteracion
 '''
@@ -240,7 +284,10 @@ def write_simplex(matrix, old, new, number):
     file.write("Numero pivot:")
     file.write(str(number))
     file.write("\n")
-    file.write("Solucion:\n")
+    if (degenerate == 1):
+        file.write("Solucion degenerada:\n")
+    else:
+        file.write("Solucion:\n")
     sol = [0]*(len(matrix[0])-2)
     for i in range(1,len(matrix)):
         index = matrix[i][0] -1
@@ -252,4 +299,3 @@ def write_simplex(matrix, old, new, number):
 
     file.write("\n\n")
     file.close()
-
