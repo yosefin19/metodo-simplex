@@ -2,6 +2,7 @@ import math
 from common import *
 from copy import copy
 
+
 '''
 Funcion principal del metodo simplex que maneja si la solucion es optima y si es multiple
 Se tiene un arreglo de solucion por la posibilidad de soluciones multiples
@@ -38,14 +39,15 @@ def simplex(matrix, variables):
         else:
             #Si la solucion es acotada se termina el procedimiento y se retorna la matriz 
             if is_unbounded(matrix):
-                print("acotada")
-                return new_matrix
+                #print("acotada")
+                return solution
             else:
                 #Se escriba la nueva iteracion
                 write_iteration(iteration)
                 #Se procede a la nueva iteracion del simplex
                 new_matrix = simplex_aux(new_matrix)
                 iteration += 1
+    
                    
 '''
 Funcion auxiliar del metodo simplex que inicialmente calcula el numero pivote, la columna y la fila apartir de la funcion pivot
@@ -70,7 +72,7 @@ def simplex_aux(matrix, pivot_second_optimal_solution = 0):
     #Escritura en archivo
     write_simplex(matrix, matrix[row][0], column, number)
     #Mostrar el progreso en consola
-    print_solution(matrix, matrix[row][0], column, number)
+    #print_solution(matrix, matrix[row][0], column, number)
     #Cambio de las Variablas Basicas
     matrix[row][0] = column
     return matrix
@@ -134,10 +136,10 @@ def print_solution(matrix, old, new, number):
 Verifica si la solucion actual es la optima, utiliza el conjunto de variables para asegurar que verifique estrictamente las que se deben
 '''
 def optimal_solution(matrix, variables):
-    #Cuenta la cantidad de variabl
-    x = variables.count('x')
-    mini = min(matrix[0][1:x+2])
-    if mini < 0 :
+    zero_row = change_m_row(matrix[0])
+    zero_row.pop()
+    minimum = min(zero_row)
+    if minimum < 0 :
         return False
     else:
         return True
@@ -246,21 +248,22 @@ def write_simplex(matrix, old, new, number):
 '''
 Pruebas
 '''
-def main():
+#def main():
 
-    test_matrix = [[0, -3, -5, 0, 0, 0, 0], [0, 1, 0, 1, 0, 0, 4], [0, 0, 2, 0, 1, 0, 12], [0, 3, 2, 0, 0, 1, 18]] 
-    var2 = [0, 'x', 'x', 'slack', 'slack','slack']
+ #   test_matrix = [[0, -3, -5, 0, 0, 0, 0], [0, 1, 0, 1, 0, 0, 4], [0, 0, 2, 0, 1, 0, 12], [0, 3, 2, 0, 0, 1, 18]] 
+  #  var2 = [0, 'x', 'x', 'slack', 'slack','slack']
 
-    matrix2 = [[0, -5, -2, 0, 0, 0],[3, 3, 1, 1, 0, 2],[4, 4, 2, 0, 1 ,2]]
+   # matrix2 = [[0, -5, -2, 0, 0, 0],[3, 3, 1, 1, 0, 2],[4, 4, 2, 0, 1 ,2]]
 
-    matrix3 = [[0, -2, -4, 0, 0, 0], [3, 1, 2, 1, 0, 5], [4, 1, 1, 0, 1, 4]]
-    var = [0, 'x', 'x', 'slack', 'slack']
+    #matrix3 = [[0, -2, -4, 0, 0, 0], [3, 1, 2, 1, 0, 5], [4, 1, 1, 0, 1, 4]] var = [0, 'x', 'x', 'slack', 'slack']
 
-    m = [[0, -1.1, -0.9, 0, 0, 1, 0, -12],[3, 0.3, 0.1, 1, 0, 0, 0, 2.7],[4, 0.5, 0.5, 0, 1, 0, 0, 6],[6, 0.6, 0.4, 0, 0, -1, 1, 6]]
-    v = [0, 'x', 'x','slack','artificial', 'excess', 'artificial']
+  #  m = [[0, -1.1, -0.9, 0, 0, 1, 0, -12],[3, 0.3, 0.1, 1, 0, 0, 0, 2.7],[4, 0.5, 0.5, 0, 1, 0, 0, 6],[6, 0.6, 0.4, 0, 0, -1, 1, 6]]
+   # v = [0, 'x', 'x','slack','artificial', 'excess', 'artificial']
     
-    #simplex(m, v)
+    #mat, sol = simplex(m, v)
+    #print("--------------------")
+    #print(mat)
     #simplex(test_matrix, var2)
     #simplex(matrix3, var)
 
-main()
+#main()

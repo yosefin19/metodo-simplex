@@ -38,5 +38,14 @@ def subtract_row(row, row2):
     n_row.append(row[0])
     for i in range(1,len(row)):
         n_row.append(float("{0:.4f}".format(row[i]-row2[i])))
-    
     return n_row
+
+def change_m_row(row):
+    len_row = len(row)
+    new_row = []
+    for i in range(len_row):
+        if(str(row[i]).count('M') > 0):
+            new_row.append(row[i].subs(M,1000))
+        else:
+            new_row.append(row[i])
+    return new_row
